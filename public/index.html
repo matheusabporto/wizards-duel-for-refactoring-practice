@@ -600,134 +600,134 @@ var state = {
 }
 
 // ── UTILS ──────────────────────────────────────────────
-function getHouseColor(h) {
-  if (h == 'Gryffindor') return '#6b1010'
-  if (h == 'Slytherin')  return '#0a3018'
-  if (h == 'Hufflepuff') return '#3a2800'
-  if (h == 'Ravenclaw')  return '#0a1a3a'
+function getHouseColor(house) {
+  if (house == 'Gryffindor') return '#6b1010'
+  if (house == 'Slytherin')  return '#0a3018'
+  if (house == 'Hufflepuff') return '#3a2800'
+  if (house == 'Ravenclaw')  return '#0a1a3a'
   return '#1e1040'
 }
-function getHouseEmoji(h) {
-  if (h == 'Gryffindor') return '🦁'
-  if (h == 'Slytherin')  return '🐍'
-  if (h == 'Hufflepuff') return '🦡'
-  if (h == 'Ravenclaw')  return '🦅'
+function getHouseEmoji(house) {
+  if (house == 'Gryffindor') return '🦁'
+  if (house == 'Slytherin')  return '🐍'
+  if (house == 'Hufflepuff') return '🦡'
+  if (house == 'Ravenclaw')  return '🦅'
   return '✦'
 }
-function hpColor(pct) {
-  if (pct > 0.6) return 'linear-gradient(90deg,#0a4a2a,#22cc77)'
-  if (pct > 0.3) return 'linear-gradient(90deg,#4a3a00,#ccaa22)'
+function hpColor(hpRatio) {
+  if (hpRatio > 0.6) return 'linear-gradient(90deg,#0a4a2a,#22cc77)'
+  if (hpRatio > 0.3) return 'linear-gradient(90deg,#4a3a00,#ccaa22)'
   return 'linear-gradient(90deg,#4a0a0a,#cc2222)'
 }
 function log(msg, type) {
   type = type || 'info'
-  var el = document.getElementById('battleLog')
-  var span = document.createElement('span')
-  span.className = 'log-entry ' + type
-  span.textContent = msg
-  el.appendChild(span)
-  el.scrollTop = el.scrollHeight
+  var logContainer = document.getElementById('battleLog')
+  var entry = document.createElement('span')
+  entry.className = 'log-entry ' + type
+  entry.textContent = msg
+  logContainer.appendChild(entry)
+  logContainer.scrollTop = logContainer.scrollHeight
 }
 function setStatus(msg) {
   document.getElementById('battleStatus').textContent = msg
 }
 function showScreen(id) {
-  document.querySelectorAll('.screen').forEach(function(s){ s.classList.remove('active') })
-  var el = document.getElementById(id)
-  if (el) el.classList.add('active')
+  document.querySelectorAll('.screen').forEach(function(screen){ screen.classList.remove('active') })
+  var targetScreen = document.getElementById(id)
+  if (targetScreen) targetScreen.classList.add('active')
 }
 
 // ── RENDER CARTA ───────────────────────────────────────
 function renderCard(char, isDraft) {
-  var pct = char.hp / char.maxHp
+  var hpRatio = char.hp / char.maxHp
   var houseColor = getHouseColor(char.house)
   var houseEmoji = getHouseEmoji(char.house)
 
-  var html = '<div class="card-img">'
-  html += '<img src="'+char.image+'" alt="'+char.name+'" onerror="this.src=\'https://upload.wikimedia.org/wikipedia/commons/thumb/a/ac/No_image_available.svg/300px-No_image_available.svg.png\'">'
-  html += '<div class="house-badge" style="background:'+houseColor+'">'+houseEmoji+'</div>'
-  html += '</div>'
-  html += '<div class="card-body">'
-  html += '<div class="card-name">'+char.name+'</div>'
-  html += '<div class="card-meta">'+char.species+' · '+char.house+'</div>'
-  html += '<div class="hp-bar-wrap">'
-  html += '<span class="hp-label">HP</span>'
-  html += '<div class="hp-track"><div class="hp-fill" style="width:'+Math.max(0,pct*100)+'%;background:'+hpColor(pct)+'"></div></div>'
-  html += '<span class="hp-val">'+Math.max(0,char.hp)+'/'+char.maxHp+'</span>'
-  html += '</div>'
-  html += '<div class="mini-stats">'
-  html += '<div class="mini-stat"><span class="mini-stat-icon">⚡</span><span class="mini-stat-val">'+char.power+'</span><span class="mini-stat-lbl">Poder</span></div>'
-  html += '<div class="mini-stat"><span class="mini-stat-icon">🔮</span><span class="mini-stat-val">'+char.magic+'</span><span class="mini-stat-lbl">Magia</span></div>'
-  html += '<div class="mini-stat"><span class="mini-stat-icon">🛡</span><span class="mini-stat-val">'+char.defense+'</span><span class="mini-stat-lbl">Defesa</span></div>'
-  html += '</div></div>'
-  return html
+  var cardHtml = '<div class="card-img">'
+  cardHtml += '<img src="'+char.image+'" alt="'+char.name+'" onerror="this.src=\'https://upload.wikimedia.org/wikipedia/commons/thumb/a/ac/No_image_available.svg/300px-No_image_available.svg.png\'">'
+  cardHtml += '<div class="house-badge" style="background:'+houseColor+'">'+houseEmoji+'</div>'
+  cardHtml += '</div>'
+  cardHtml += '<div class="card-body">'
+  cardHtml += '<div class="card-name">'+char.name+'</div>'
+  cardHtml += '<div class="card-meta">'+char.species+' · '+char.house+'</div>'
+  cardHtml += '<div class="hp-bar-wrap">'
+  cardHtml += '<span class="hp-label">HP</span>'
+  cardHtml += '<div class="hp-track"><div class="hp-fill" style="width:'+Math.max(0,hpRatio*100)+'%;background:'+hpColor(hpRatio)+'"></div></div>'
+  cardHtml += '<span class="hp-val">'+Math.max(0,char.hp)+'/'+char.maxHp+'</span>'
+  cardHtml += '</div>'
+  cardHtml += '<div class="mini-stats">'
+  cardHtml += '<div class="mini-stat"><span class="mini-stat-icon">⚡</span><span class="mini-stat-val">'+char.power+'</span><span class="mini-stat-lbl">Poder</span></div>'
+  cardHtml += '<div class="mini-stat"><span class="mini-stat-icon">🔮</span><span class="mini-stat-val">'+char.magic+'</span><span class="mini-stat-lbl">Magia</span></div>'
+  cardHtml += '<div class="mini-stat"><span class="mini-stat-icon">🛡</span><span class="mini-stat-val">'+char.defense+'</span><span class="mini-stat-lbl">Defesa</span></div>'
+  cardHtml += '</div></div>'
+  return cardHtml
 }
 
 // ── DECK BADGES ────────────────────────────────────────
 function renderDeckBadges(deck, activeIdx, elId) {
-  var el = document.getElementById(elId)
-  var html = ''
+  var container = document.getElementById(elId)
+  var badgesHtml = ''
   for (var i = 0; i < deck.length; i++) {
-    var cls = deck[i].hp <= 0 ? 'deck-thumb dead' : (i == activeIdx ? 'deck-thumb active' : 'deck-thumb')
-    html += '<div class="'+cls+'"><img src="'+deck[i].image+'" onerror="this.src=\'https://upload.wikimedia.org/wikipedia/commons/thumb/a/ac/No_image_available.svg/300px-No_image_available.svg.png\'"></div>'
+    var thumbClass = deck[i].hp <= 0 ? 'deck-thumb dead' : (i == activeIdx ? 'deck-thumb active' : 'deck-thumb')
+    badgesHtml += '<div class="'+thumbClass+'"><img src="'+deck[i].image+'" onerror="this.src=\'https://upload.wikimedia.org/wikipedia/commons/thumb/a/ac/No_image_available.svg/300px-No_image_available.svg.png\'"></div>'
   }
-  el.innerHTML = html
+  container.innerHTML = badgesHtml
 }
 
 // ── SPELL LIST ─────────────────────────────────────────
 function renderSpells(enabled) {
-  var el = document.getElementById('spellList')
-  var html = ''
+  var container = document.getElementById('spellList')
+  var spellsHtml = ''
   for (var i = 0; i < state.playerSpells.length; i++) {
-    var sp = state.playerSpells[i]
-    var isHeal = sp.damage < 0
-    var dmgLabel = isHeal ? '💚 +'+Math.abs(sp.damage)+' HP' : '💀 '+sp.damage+' dmg'
-    var dmgClass = isHeal ? 'spell-dmg heal' : 'spell-dmg attack'
-    var dis = enabled ? '' : 'disabled'
-    html += '<button class="spell-btn" '+dis+' onclick="castSpell('+i+')">'
-    html += '<div><span class="spell-name">'+sp.name+'</span><span class="spell-effect">'+sp.effect+'</span></div>'
-    html += '<span class="'+dmgClass+'">'+dmgLabel+'</span>'
-    html += '</button>'
+    var spell = state.playerSpells[i]
+    var isHeal = spell.damage < 0
+    var damageLabel = isHeal ? '💚 +'+Math.abs(spell.damage)+' HP' : '💀 '+spell.damage+' dmg'
+    var damageClass = isHeal ? 'spell-dmg heal' : 'spell-dmg attack'
+    var disabledAttr = enabled ? '' : 'disabled'
+    spellsHtml += '<button class="spell-btn" '+disabledAttr+' onclick="castSpell('+i+')">'
+    spellsHtml += '<div><span class="spell-name">'+spell.name+'</span><span class="spell-effect">'+spell.effect+'</span></div>'
+    spellsHtml += '<span class="'+damageClass+'">'+damageLabel+'</span>'
+    spellsHtml += '</button>'
   }
-  el.innerHTML = html
+  container.innerHTML = spellsHtml
 }
 
 // ── LOADING ────────────────────────────────────────────
 async function loadGame() {
-  var bar = document.getElementById('loadBar')
-  var msg = document.getElementById('loadMsg')
+  var loadBar = document.getElementById('loadBar')
+  var loadMsg = document.getElementById('loadMsg')
 
-  msg.textContent = 'Invocando personagens...'
-  bar.style.width = '20%'
+  loadMsg.textContent = 'Invocando personagens...'
+  loadBar.style.width = '20%'
 
-  var packRes = await fetch('/api/pack')
-  var packData = await packRes.json()
+  var packResponse = await fetch('/api/pack')
+  var packData = await packResponse.json()
   state.pack = packData.cards
 
-  bar.style.width = '55%'
-  msg.textContent = 'Consultando o livro de feitiços...'
+  loadBar.style.width = '55%'
+  loadMsg.textContent = 'Consultando o livro de feitiços...'
 
-  var spellRes = await fetch('/api/spells')
-  var spellData = await spellRes.json()
+  var spellResponse = await fetch('/api/spells')
+  var spellData = await spellResponse.json()
   state.spells = spellData.spells
 
-  bar.style.width = '85%'
-  msg.textContent = 'Preparando o adversário...'
+  loadBar.style.width = '85%'
+  loadMsg.textContent = 'Preparando o adversário...'
 
-  var cpuRes = await fetch('/api/cpu-deck', { method: 'POST' })
-  var cpuData = await cpuRes.json()
+  var cpuResponse = await fetch('/api/cpu-deck', { method: 'POST' })
+  var cpuData = await cpuResponse.json()
   state.cpuDeck = cpuData.deck
 
   // atribui 3 feitiços aleatorios ao jogador
   var shuffled = state.spells.slice()
-  for (var x = shuffled.length - 1; x > 0; x--) {
-    var y = Math.floor(Math.random() * (x + 1))
-    var z = shuffled[x]; shuffled[x] = shuffled[y]; shuffled[y] = z
+  for (var currentIndex = shuffled.length - 1; currentIndex > 0; currentIndex--) {
+    var randomIndex = Math.floor(Math.random() * (currentIndex + 1))
+    var temp = shuffled[currentIndex]; shuffled[currentIndex] = shuffled[randomIndex]; shuffled[randomIndex] = temp
   }
   state.playerSpells = shuffled.slice(0, 5)
 
-  bar.style.width = '100%'
-  msg.textContent = 'Pronto!'
+  loadBar.style.width = '100%'
+  loadMsg.textContent = 'Pronto!'
 
   setTimeout(function() {
     document.getElementById('screen-loading').classList.add('fade-out')
@@ -758,9 +758,9 @@ function renderPack() {
 }
 
 function toggleDraftCard(idx) {
-  var pos = state.selectedCards.indexOf(idx)
-  if (pos >= 0) {
-    state.selectedCards.splice(pos, 1)
+  var selectedPosition = state.selectedCards.indexOf(idx)
+  if (selectedPosition >= 0) {
+    state.selectedCards.splice(selectedPosition, 1)
   } else {
     if (state.selectedCards.length >= 2) return
     state.selectedCards.push(idx)
@@ -810,36 +810,36 @@ function getActiveIdx(deck) {
 }
 
 function renderBattleState() {
-  var pIdx = getActiveIdx(state.playerDeck)
-  var cIdx = getActiveIdx(state.cpuDeck)
+  var playerIndex = getActiveIdx(state.playerDeck)
+  var cpuIndex = getActiveIdx(state.cpuDeck)
 
-  if (pIdx < 0 || cIdx < 0) { endGame(); return }
+  if (playerIndex < 0 || cpuIndex < 0) { endGame(); return }
 
-  var pChar = state.playerDeck[pIdx]
-  var cChar = state.cpuDeck[cIdx]
+  var playerCharacter = state.playerDeck[playerIndex]
+  var cpuCharacter = state.cpuDeck[cpuIndex]
 
-  document.getElementById('playerActiveName').textContent = pChar.name
-  document.getElementById('cpuActiveName').textContent = cChar.name
+  document.getElementById('playerActiveName').textContent = playerCharacter.name
+  document.getElementById('cpuActiveName').textContent = cpuCharacter.name
 
-  var pSlot = document.getElementById('playerCardSlot')
-  var cSlot = document.getElementById('cpuCardSlot')
+  var playerSlot = document.getElementById('playerCardSlot')
+  var cpuSlot = document.getElementById('cpuCardSlot')
 
-  var pdiv = document.createElement('div')
-  pdiv.className = 'card battle-card'
-  pdiv.id = 'battleCardP'
-  pdiv.innerHTML = renderCard(pChar, false)
-  pSlot.innerHTML = ''
-  pSlot.appendChild(pdiv)
+  var playerCardDiv = document.createElement('div')
+  playerCardDiv.className = 'card battle-card'
+  playerCardDiv.id = 'battleCardP'
+  playerCardDiv.innerHTML = renderCard(playerCharacter, false)
+  playerSlot.innerHTML = ''
+  playerSlot.appendChild(playerCardDiv)
 
-  var cdiv = document.createElement('div')
-  cdiv.className = 'card battle-card'
-  cdiv.id = 'battleCardC'
-  cdiv.innerHTML = renderCard(cChar, false)
-  cSlot.innerHTML = ''
-  cSlot.appendChild(cdiv)
+  var cpuCardDiv = document.createElement('div')
+  cpuCardDiv.className = 'card battle-card'
+  cpuCardDiv.id = 'battleCardC'
+  cpuCardDiv.innerHTML = renderCard(cpuCharacter, false)
+  cpuSlot.innerHTML = ''
+  cpuSlot.appendChild(cpuCardDiv)
 
-  renderDeckBadges(state.playerDeck, pIdx, 'playerDeckBadges')
-  renderDeckBadges(state.cpuDeck, cIdx, 'cpuDeckBadges')
+  renderDeckBadges(state.playerDeck, playerIndex, 'playerDeckBadges')
+  renderDeckBadges(state.cpuDeck, cpuIndex, 'cpuDeckBadges')
   renderSpells(!state.waiting)
 }
 
@@ -848,64 +848,64 @@ function castSpell(spellIdx) {
   state.waiting = true
   renderSpells(false)
 
-  var sp = state.playerSpells[spellIdx]
-  var pIdx = getActiveIdx(state.playerDeck)
-  var cIdx = getActiveIdx(state.cpuDeck)
-  var pChar = state.playerDeck[pIdx]
-  var cChar = state.cpuDeck[cIdx]
+  var spell = state.playerSpells[spellIdx]
+  var playerIndex = getActiveIdx(state.playerDeck)
+  var cpuIndex = getActiveIdx(state.cpuDeck)
+  var playerCharacter = state.playerDeck[playerIndex]
+  var cpuCharacter = state.cpuDeck[cpuIndex]
 
   // aplica feitico do jogador
-  var pDmg = Math.floor(sp.damage * (pChar.magic / 100) * (Math.random() * 0.4 + 0.8))
+  var playerDamage = Math.floor(spell.damage * (playerCharacter.magic / 100) * (Math.random() * 0.4 + 0.8))
 
-  if (sp.damage < 0) {
+  if (spell.damage < 0) {
     // cura
-    var heal = Math.abs(pDmg)
-    pChar.hp = Math.min(pChar.maxHp, pChar.hp + heal)
-    log('✨ ' + sp.name + ' — você curou ' + heal + ' HP! (' + pChar.name + ': ' + pChar.hp + ' HP)', 'heal')
+    var heal = Math.abs(playerDamage)
+    playerCharacter.hp = Math.min(playerCharacter.maxHp, playerCharacter.hp + heal)
+    log('✨ ' + spell.name + ' — você curou ' + heal + ' HP! (' + playerCharacter.name + ': ' + playerCharacter.hp + ' HP)', 'heal')
     document.getElementById('battleCardP').classList.add('battling')
     setTimeout(function(){ document.getElementById('battleCardP') && document.getElementById('battleCardP').classList.remove('battling') }, 500)
   } else {
     // ataque
-    cChar.hp = cChar.hp - pDmg
-    log('⚡ ' + sp.name + ' → ' + cChar.name + ' perdeu ' + pDmg + ' HP! (' + cChar.name + ': ' + Math.max(0, cChar.hp) + ' HP)', 'win')
+    cpuCharacter.hp = cpuCharacter.hp - playerDamage
+    log('⚡ ' + spell.name + ' → ' + cpuCharacter.name + ' perdeu ' + playerDamage + ' HP! (' + cpuCharacter.name + ': ' + Math.max(0, cpuCharacter.hp) + ' HP)', 'win')
     document.getElementById('battleCardC').classList.add('hit')
     setTimeout(function(){ document.getElementById('battleCardC') && document.getElementById('battleCardC').classList.remove('hit') }, 600)
   }
 
   // cpu escolhe feitico aleatorio
   setTimeout(function() {
-    var cpuSpellIdx = Math.floor(Math.random() * state.spells.length)
-    var cpuSp = state.spells[cpuSpellIdx]
-    var cpuDmg = Math.floor(cpuSp.damage * (cChar.magic / 100) * (Math.random() * 0.4 + 0.8))
+    var cpuSpellIndex = Math.floor(Math.random() * state.spells.length)
+    var cpuSpell = state.spells[cpuSpellIndex]
+    var cpuDamage = Math.floor(cpuSpell.damage * (cpuCharacter.magic / 100) * (Math.random() * 0.4 + 0.8))
 
-    if (cpuSp.damage < 0) {
-      var cpuHeal = Math.abs(cpuDmg)
-      cChar.hp = Math.min(cChar.maxHp, cChar.hp + cpuHeal)
-      log('🧙 CPU: ' + cpuSp.name + ' — CPU curou ' + cpuHeal + ' HP! (' + cChar.name + ': ' + cChar.hp + ' HP)', 'heal')
+    if (cpuSpell.damage < 0) {
+      var cpuHeal = Math.abs(cpuDamage)
+      cpuCharacter.hp = Math.min(cpuCharacter.maxHp, cpuCharacter.hp + cpuHeal)
+      log('🧙 CPU: ' + cpuSpell.name + ' — CPU curou ' + cpuHeal + ' HP! (' + cpuCharacter.name + ': ' + cpuCharacter.hp + ' HP)', 'heal')
       document.getElementById('battleCardC') && document.getElementById('battleCardC').classList.add('battling')
       setTimeout(function(){ document.getElementById('battleCardC') && document.getElementById('battleCardC').classList.remove('battling') }, 500)
     } else {
-      pChar.hp = pChar.hp - cpuDmg
-      log('💀 CPU: ' + cpuSp.name + ' → ' + pChar.name + ' perdeu ' + cpuDmg + ' HP! (' + pChar.name + ': ' + Math.max(0, pChar.hp) + ' HP)', 'lose')
+      playerCharacter.hp = playerCharacter.hp - cpuDamage
+      log('💀 CPU: ' + cpuSpell.name + ' → ' + playerCharacter.name + ' perdeu ' + cpuDamage + ' HP! (' + playerCharacter.name + ': ' + Math.max(0, playerCharacter.hp) + ' HP)', 'lose')
       document.getElementById('battleCardP') && document.getElementById('battleCardP').classList.add('hit')
       setTimeout(function(){ document.getElementById('battleCardP') && document.getElementById('battleCardP').classList.remove('hit') }, 600)
     }
 
     setTimeout(function() {
       // verifica mortes
-      var pNewIdx = getActiveIdx(state.playerDeck)
-      var cNewIdx = getActiveIdx(state.cpuDeck)
+      var newPlayerIndex = getActiveIdx(state.playerDeck)
+      var newCpuIndex = getActiveIdx(state.cpuDeck)
 
       var roundOver = false
 
-      if (pIdx >= 0 && state.playerDeck[pIdx].hp <= 0) {
-        log('💀 ' + state.playerDeck[pIdx].name + ' foi derrotado!', 'lose')
+      if (playerIndex >= 0 && state.playerDeck[playerIndex].hp <= 0) {
+        log('💀 ' + state.playerDeck[playerIndex].name + ' foi derrotado!', 'lose')
         state.scoreC++
         document.getElementById('scoreC').textContent = state.scoreC
         roundOver = true
       }
-      if (cIdx >= 0 && state.cpuDeck[cIdx].hp <= 0) {
-        log('🏆 ' + state.cpuDeck[cIdx].name + ' foi derrotado!', 'win')
+      if (cpuIndex >= 0 && state.cpuDeck[cpuIndex].hp <= 0) {
+        log('🏆 ' + state.cpuDeck[cpuIndex].name + ' foi derrotado!', 'win')
         state.scoreP++
         document.getElementById('scoreP').textContent = state.scoreP
         roundOver = true
@@ -913,10 +913,10 @@ function castSpell(spellIdx) {
 
       renderBattleState()
 
-      var pAlive = getActiveIdx(state.playerDeck)
-      var cAlive = getActiveIdx(state.cpuDeck)
+      var playerAlive = getActiveIdx(state.playerDeck)
+      var cpuAlive = getActiveIdx(state.cpuDeck)
 
-      if (pAlive < 0 || cAlive < 0) {
+      if (playerAlive < 0 || cpuAlive < 0) {
         setTimeout(endGame, 800)
         return
       }
@@ -948,7 +948,7 @@ function nextRound() {
 
 // ── END ────────────────────────────────────────────────
 function endGame() {
-  var over = document.getElementById('screen-over')
+  var overScreen = document.getElementById('screen-over')
   var glyph = document.getElementById('overGlyph')
   var title = document.getElementById('overTitle')
   var sub   = document.getElementById('overSub')
@@ -968,7 +968,7 @@ function endGame() {
     sub.textContent   = 'Bruxos igualmente poderosos.'
   }
   score.textContent = 'Você ' + state.scoreP + '  ×  ' + state.scoreC + ' CPU'
-  over.classList.add('active')
+  overScreen.classList.add('active')
 }
 
 function restartGame() {
