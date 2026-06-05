@@ -1,26 +1,29 @@
-const express = require('express')
-const { fetchCharacters } = require('../services/potterApi')
-const { PACK_SIZE } = require('../constants')
+const express = require('express');
+const { fetchCharacters } = require('../services/potterApi');
+const { PACK_SIZE } = require('../constants');
 
-const router = express.Router()
+const router = express.Router();
 
 function shuffleArray(array) {
-  for (var currentIndex = array.length - 1; currentIndex > 0; currentIndex--) {
-    var randomIndex = Math.floor(Math.random() * (currentIndex + 1))
-    var temp = array[currentIndex]; array[currentIndex] = array[randomIndex]; array[randomIndex] = temp
+  const arr = [...array];
+  for (let currentIndex = arr.length - 1; currentIndex > 0; currentIndex -= 1) {
+    const randomIndex = Math.floor(Math.random() * (currentIndex + 1));
+    const temp = arr[currentIndex];
+    arr[currentIndex] = arr[randomIndex];
+    arr[randomIndex] = temp;
   }
-  return array
+  return arr;
 }
 
 router.get('/pack', async (req, res) => {
   try {
-    var characters = await fetchCharacters()
-    var shuffled = shuffleArray(characters)
-    res.json({ cards: shuffled.slice(0, PACK_SIZE) })
+    const characters = await fetchCharacters();
+    const shuffled = shuffleArray(characters);
+    res.json({ cards: shuffled.slice(0, PACK_SIZE) });
   } catch (error) {
-    console.log(error)
-    res.status(500).json({ error: 'erro ao buscar personagens' })
+    console.error(error);
+    res.status(500).json({ error: 'erro ao buscar personagens' });
   }
-})
+});
 
-module.exports = router
+module.exports = router;

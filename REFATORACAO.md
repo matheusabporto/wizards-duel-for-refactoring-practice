@@ -75,6 +75,15 @@ Valores literais sem contexto espalhados pelo código, extraídos para `constant
 
 **Separação de ambientes no ESLint:** o `.eslintrc.json` inclui `"browser": true` além de `"node": true` porque o projeto possui JavaScript rodando tanto no servidor (Express) quanto no navegador (`public/index.html`). Sem essa configuração, o ESLint acusaria erro em variáveis globais do browser como `document`, `fetch` e `window`.
 
+**Erros encontrados pelo ESLint após a refatoração de code smells:** ao rodar o ESLint depois das correções manuais, 16 erros persistiram em quatro categorias:
+
+- **`no-plusplus`**: a Airbnb proíbe os operadores `++` e `--`. Substituídos por `+= 1` e `-= 1` em todos os loops.
+- **`no-param-reassign`**: a função `shuffleArray` modificava diretamente as propriedades do parâmetro `array` (ex: `array[i] = ...`). Corrigido criando uma cópia interna com `const arr = [...array]` e operando sobre ela.
+- **`max-len`**: a linha do swap no algoritmo Fisher-Yates tinha 106 caracteres (máximo permitido: 100). Corrigido separando as três atribuições em linhas individuais.
+- **`no-continue`**: a Airbnb proíbe a instrução `continue` em loops. Substituído por um bloco `if` que envolve o corpo do loop, invertendo a condição de filtragem.
+
+Após as correções, o resultado final foi **0 erros e 4 warnings**. Os warnings são de `no-console` nos blocos `catch` e no `app.listen` — uso legítimo de log que não afeta a nota.
+
 **Erro durante a renomeação de variáveis:** ao renomear `bar` e `msg` para `loadBar` e `loadMsg` na função `loadGame`, duas referências no final da função foram esquecidas e permaneceram com os nomes antigos. O jogo ficou travado na tela de carregamento com a mensagem "Preparando o adversário...". O erro foi identificado pelo console do navegador (`ReferenceError: bar is not defined`), que apontou exatamente a linha do problema. A correção foi simples — atualizar as duas referências restantes — mas o episódio reforça a importância de verificar o funcionamento da aplicação após cada etapa de refatoração, mesmo quando as mudanças parecem puramente mecânicas.
 
 **Estrutura de arquivos adotada:**
@@ -111,4 +120,4 @@ wizard-duel/
 | `refactor: extract magic numbers to constants.js` | Criação do `constants.js` com todas as constantes |
 | `refactor: eliminate duplicated code` | Extração de funções reutilizáveis (`shuffleArray`, `buildCard`, `fetchCharacters`) |
 | `refactor: separate responsibilities` | Reorganização em `routes/`, `services/` e separação do frontend |
-| `refactor: fix general code smells` | `var` → `const/let`, `===`, template literals, `console.error` |
+| `refactor: fix general code smells` | `var` → `const/let`, `===`, template literals, `console.error`. Erros ESLint: de 465 (baseline) → 149 → **0 erros, 4 warnings** |
