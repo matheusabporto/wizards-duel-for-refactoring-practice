@@ -75,6 +75,8 @@ Valores literais sem contexto espalhados pelo código, extraídos para `constant
 
 **Separação de ambientes no ESLint:** o `.eslintrc.json` inclui `"browser": true` além de `"node": true` porque o projeto possui JavaScript rodando tanto no servidor (Express) quanto no navegador (`public/index.html`). Sem essa configuração, o ESLint acusaria erro em variáveis globais do browser como `document`, `fetch` e `window`.
 
+**Erro durante a renomeação de variáveis:** ao renomear `bar` e `msg` para `loadBar` e `loadMsg` na função `loadGame`, duas referências no final da função foram esquecidas e permaneceram com os nomes antigos. O jogo ficou travado na tela de carregamento com a mensagem "Preparando o adversário...". O erro foi identificado pelo console do navegador (`ReferenceError: bar is not defined`), que apontou exatamente a linha do problema. A correção foi simples — atualizar as duas referências restantes — mas o episódio reforça a importância de verificar o funcionamento da aplicação após cada etapa de refatoração, mesmo quando as mudanças parecem puramente mecânicas.
+
 **Estrutura de arquivos adotada:**
 
 ```
