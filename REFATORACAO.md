@@ -1,5 +1,14 @@
 # Refatoração — Wizard Duel
 
+## Membros
+
+Matheus Albuquerque Bezerra Porto
+João Gabriel Sousa e Silva
+Felipe Diniz Mariano
+Thiago Yan De Paula Lima
+Rafaele Gomes
+Paulo Haskley Queiroz de Lima
+
 ## Uso de Inteligência Artificial
 
 Este trabalho contou com o auxílio do Claude (Anthropic) como ferramenta de apoio. A IA foi utilizada para:
